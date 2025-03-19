@@ -107,20 +107,20 @@ export default function KeyStorePage() {
         <h2 className="text-lg font-semibold">Actions</h2>
           <div>
             <label className="block text-sm font-medium">Key</label>
-            <input className="mt-1 p-2 border border-gray-300 rounded" type="text"
+            <input className="mt-1 p-2 border border-gray-300 rounded w-full" type="text"
               value={key} onChange={(e) => setKey(e.target.value)}
             />
           </div>
           <div>
             <label className="block text-sm font-medium">Value</label>
-            <input className="mt-1 p-2 border border-gray-300 rounded" type="text"
+            <input className="mt-1 p-2 border border-gray-300 rounded w-full" type="text"
               value={value} onChange={(e) => setValue(e.target.value)}
             />
           </div>
-          <div className="flex space-x-2 mt-4">
-              <button className="p-2 bg-blue-500 text-white rounded" onClick={addSetAction}>Set</button>
-              <button className="p-2 bg-green-500 text-white rounded" onClick={getKeyValue}>Get</button>
-              <button className="p-2 bg-red-500 text-white rounded" onClick={addDeleteAction}>Delete</button>
+          <div className="flex space-x-3 mt-4">
+              <button className="p-3 bg-blue-500 text-white rounded" onClick={addSetAction}>Set</button>
+              <button className="p-3 bg-green-500 text-white rounded" onClick={getKeyValue}>Get</button>
+              <button className="p-3 bg-red-400 text-white rounded" onClick={addDeleteAction}>Delete</button>
           </div>
       </div>
 

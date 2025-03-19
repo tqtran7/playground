@@ -1,7 +1,7 @@
 
 
 import { NextApiRequest, NextApiResponse } from 'next';
-import { store, history, prisma } from '@/lib/store';
+import { Action, store, history, prisma } from '@/lib/store';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     
@@ -9,10 +9,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         return res.status(405).end(`Method ${req.method} Not Allowed`);
     }
 
-    console.log('history length:', history.length);
-
     // pop history until we reach previous commit block
-    let ids = [];
+    let ids : Action[] = [];
     if (history.length > 0) {
         let action = history.pop();
         ids.push(action.id);
@@ -32,7 +30,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
 function undoAction(action: any) {
     const { key, value } = action;
-    console.log(`undoing ${action.action} ${key}:${value}`);
+    // console.log(`undoing ${action.action} ${key}:${value}`);
     switch (action.action) {
         case 'set': delete store[key]; break;
         case 'delete': store[key] = value; break;
