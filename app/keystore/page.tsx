@@ -31,7 +31,7 @@ export default function KeyStorePage() {
   }, []);
 
   const addSetAction = () => {
-    if (key && value !== undefined) {
+    if (key && value) {
       setActions([...actions, { action: 'set', key, value }]);
       setKey('');
       setValue('');
@@ -72,7 +72,7 @@ export default function KeyStorePage() {
           });
           const data = await res.json();
           setJsonPreview(JSON.stringify(data.store, null, 2));
-          setHistory(data.history);
+          setHistory(data.history || []);
           setActions([]);
       } catch (error) {
           console.error('Error committing actions:', error);
@@ -88,7 +88,7 @@ export default function KeyStorePage() {
       });
       const data = await res.json();
       setJsonPreview(JSON.stringify(data.store, null, 2));
-      setHistory(data.history);
+      setHistory(data.history || []);
       setActions([]);
     } catch (error) {
         console.error('Error committing actions:', error);
