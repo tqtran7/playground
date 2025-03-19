@@ -24,6 +24,8 @@ We need to setup Prisma so that it can connect to our postgres DB.
 npx prisma generate
 ```
 
+## Starting the server
+
 To start the server
 ```bash
 npm run dev
