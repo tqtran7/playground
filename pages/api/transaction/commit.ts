@@ -1,6 +1,6 @@
 
 import { NextApiRequest, NextApiResponse } from 'next';
-import { store, snapshots } from '@/lib/store';
+import { store, history } from '@/lib/store';
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
 
@@ -17,9 +17,13 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
     try {
         // Take a snapshot after each commit
         // If any action fails validation, they all fail
-        actions.forEach(action => processAction(action));
-        snapshots.push({ ...store });
-        return res.json({ success: true, store });
+        if (actions.length) {
+            history.push({ action: 'start' });
+            actions.forEach(action => processAction(action));
+            history.push({ action: 'commit' });
+            console.log(history);
+        }
+        return res.json({ success: true, store, history });
     } 
     
     catch (error: any) {
@@ -32,10 +36,12 @@ function processAction(action: any) {
     switch (action.action) {
         case 'set':
             if (!key || !value) throw new Error('Set action missing key and value');
+            history.push({ action: 'set', key, value });
             store[key] = value;
             break;
         case 'delete':
             if (!key) throw new Error('Delete action missing key');
+            history.push({ action: 'delete', key, value: store[key] });
             delete store[key];
             break;
         default:

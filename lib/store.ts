@@ -1,11 +1,13 @@
 
-// In-memory keystore
-
-export let store: Record<string, any> = {};
-export let snapshots: Record<string, any>[] = [];
-export function setStore(newStore: Record<string, any> | undefined) {
-    if (newStore) {
-        store = {};
-        store = newStore;
-    }
+export interface Action {
+    action: string;
+    key?: string;
+    value?: any;
 }
+
+// In-memory keystore
+// Initialize once on server start
+export let store: Record<string, any> = {};
+
+// Keep track of actions so we can rollback
+export let history : Action[] = [];

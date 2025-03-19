@@ -1,7 +1,7 @@
 
 
 import { NextApiRequest, NextApiResponse } from 'next';
-import { store, setStore, snapshots } from '@/lib/store';
+import { store, history } from '@/lib/store';
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
     
@@ -9,10 +9,24 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
         return res.status(405).end(`Method ${req.method} Not Allowed`);
     }
 
-    if (snapshots.length > 0) {
-        setStore(snapshots.pop());
-        return res.json({ success: true, store });
+    // pop history until we reach previous commit block
+    if (history.length > 0) {
+        let action = history.pop();
+        while (action?.action !== 'start') {
+            undoAction(action);
+            action = history.pop();
+        }
+
+        return res.json({ success: true, store, history });
     }
 
     return res.status(400).json({ error: 'No transaction to rollback' });
+}
+
+function undoAction(action: any) {
+    const { key, value } = action;
+    switch (action.action) {
+        case 'set': delete store[key]; break;
+        case 'delete': store[key] = value; break;
+    }
 }
