@@ -36,6 +36,11 @@ Go to `localhost:3000/keystore` to preview the keystore page.
 You should see something like this:
 ![Screenshot](public/screenshot.png)
 
+To run unit tests
+```bash
+npm run test
+```
+
 ## Additional Database Configuration Notes
 
 If you need to update the schema, modify the `schema.primsa` file.
