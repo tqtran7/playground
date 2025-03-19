@@ -1,34 +1,24 @@
 ## Instructions
 
-Install dependencies:
+For this project to work correctly, you will need to have the following:
+- NodeJS ([v23.3.0 prefered](https://nodejs.org/en/download))
+- Postgres (https://www.postgresql.org/download/)
+- Create a `.env` file in the root folder of the project
 
+Once Node is installed, install dependencies with npm:
 ```bash
 npm install
 ```
 
-Start server:
+## Database Setup
 
-```bash
-npm run dev
+Add the following to your `.env` file, make sure to replace username, password, and port.
+```
+DATABASE_URL='postgresql://<username>:<password>@localhost:<port>/keystore'
 ```
 
-Go to `localhost:3000` to verify that the server is running.
-
-
-
-This project demonstrates how to setup a simple API for the todo application. The database is already configured and setup remotely. You just need to install the dependencies and start the server.
-
-NOTE: This application was tested on `node v23.3.0`
-
-## Database Instructions
-
-Install dependencies:
-
-```bash
-npm install
-```
-
-Start server:
+Make sure that this database exist in your postgres! If it does not, create one.
+We need to setup Prisma so that it can connect to our postgres DB.
 
 ```bash
 npx prisma generate
@@ -36,18 +26,13 @@ npm run dev
 ```
 
 Go to `localhost:3000/ping` to verify that the server is running.
+
 Go to `localhost:3000/keystore` to preview the keystore page.
 
-## Env file
+You should see something like this:
+![Screenshot](public/screenshot.png)
 
-Create a `.env` file and paste and save the following snippet.
-Under normal circumstances, the contents of this file will never be shared.
-
-```
-DATABASE_URL="mysql://<username>:<password>@<url>:28221/defaultdb"
-```
-
-## Database Configurations
+## Additional Database Configuration Notes
 
 If you need to update the schema, modify the `schema.primsa` file.
 Then run the following command to update.
@@ -65,28 +50,21 @@ npx prisma init
 Paste the following into the schema file.
 
 ```
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "mysql"
-  url      = env("DATABASE_URL")
+  provider = "postgresql"  // Change provider to PostgreSQL
+  url      = env("DATABASE_URL")  // Ensure this is updated with your PostgreSQL connection URL
 }
 
-model Task {
-  id    Int    @id @default(autoincrement())
-  color  String
-  message String @db.Text
-  completed Boolean @default(false)
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @default(now())
+model Action {
+  id      Int      @id @default(autoincrement()) // Use auto-incrementing integer ID
+  action  String
+  key     String?  // Optional field
+  value   Json?    // Optional field
+  created DateTime @default(now())
 }
 ```
 
